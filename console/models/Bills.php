@@ -68,16 +68,16 @@ class Bills extends Model
             $response = $billPayments->getBillInfo($billId);
             if(isset($response['status']['value'])){
                 $status = '';
-                if($response['status']['value'] == 'WAITING'){
+                if($response['status']['value'] === 'WAITING'){
                     $status = 'WAITING';
                 }
-                if($response['status']['value'] == 'PAID'){
+                if($response['status']['value'] === 'PAID'){
                     $status = 'PAID stage 1 of 5';
                 }
-                if($response['status']['value'] == 'REJECTED'){
+                if($response['status']['value'] === 'REJECTED'){
                     $status = 'REJECTED';
                 }
-                if($response['status']['value'] == 'EXPIRED'){
+                if($response['status']['value'] === 'EXPIRED'){
                     $status = 'EXPIRED';
                 }
                 $updOrder = Orders::findOne($order['id']);
@@ -95,7 +95,7 @@ class Bills extends Model
 
         if(!empty($orders)){
             foreach($orders as $order){
-                if($order['status']=='PAID stage 1 of 5'){
+                if($order['status'] === 'PAID stage 1 of 5'){
                     $request = new Request(self::KEY_EXMO_OUT, self::SECRET_EXMO_OUT);
                     $response = $request->query('user_info');
                     if(isset($response['balances']['RUB'])){
@@ -114,16 +114,16 @@ class Bills extends Model
                     }
                 }
 
-                if($order['status']=='PAID stage 2 of 5'){
+                if($order['status'] === 'PAID stage 2 of 5'){
                     $this->Exmobtcbuyaccept($order['exmo_id'], $order['id']);
                 }
 
-                if($order['status']=='PAID stage 3 of 5'){
+                if($order['status'] === 'PAID stage 3 of 5'){
                     // выведем BTC на указанный кошелек
                     $this->Exmocriptoout($order['out_sum'], $order['wallet_id'], $order['id']);
                 }
 
-                if($order['status']=='PAID stage 4 of 5'){
+                if($order['status'] === 'PAID stage 4 of 5'){
                     $this->Criptooutaccept($order['exmo_out_id'], $order['id']);
                 }
             }

@@ -29,7 +29,7 @@ class Exmo extends Model
             $response_arr = json_decode($response,1);
 
             foreach($response_arr as $item_key=>$item_value){
-                if(in_array($item_key, $curr)){
+                if(in_array($item_key, $curr, true)){
                     // пишем в базу результат !!!!!!!!!
                     $findCurr = Rates::find()->where(['cripto_name'=>$item_key])->one();
                     if(empty($findCurr)){
